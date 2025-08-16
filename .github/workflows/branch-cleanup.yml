@@ -1,0 +1,21 @@
+name: Branch Cleanup
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Run Branch Cleanup
+        run: dotnet run --project ./GitPruner/GitPruner.csproj -- \             -o ${{ github.repository_owner }} \             -r ${{ github.event.repository.name }} \             -t ${{ secrets.GITHUB_TOKEN }} \             --prReminderDays 30 \             --branchIdleDays 90
