@@ -18,7 +18,8 @@ if (string.IsNullOrEmpty(options.Owner) || string.IsNullOrEmpty(options.Repo) ||
 
 var services = new ServiceCollection()
     .AddSingleton(options)
-    .AddSingleton<IGitHubService>(provider => new GitHubService(provider.GetRequiredService<ConfigOptions>().Token))
+    .AddSingleton<IGitHubClientWrapper>(provider => new GitHubClientWrapper(provider.GetRequiredService<ConfigOptions>().Token))
+    .AddSingleton<IGitHubService, GitHubService>()
     .AddSingleton<IBranchCleanupService, BranchCleanupService>()
     .BuildServiceProvider();
 
